@@ -1,0 +1,235 @@
+/* General Body Styling */
+body {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  background-color: #fef4f8; /* Light pink background */
+  margin: 0;
+  padding: 0;
+  color: #333;
+  transition: all 0.3s ease; /* Smooth transition for changes */
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+/* Header Styling (Expanded State) */
+header {
+  text-align: center;
+  background-color: #ff80ab; /* Soft pink background */
+  color: white;
+  padding: 60px 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid #f1f1f1;
+  position: relative;
+  transition: all 0.3s ease;  /* Smooth transition */
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+header.expanded {
+  padding: 60px 0 120px;  /* Expand downwards to create space for the description box */
+}
+
+#time-counter {
+  font-size: 1.2rem;
+  color: #444;
+  background-color: #f1f1f1;
+  padding: 20px;
+  border: 2px solid #ff80ab;
+  border-radius: 10px;
+  margin-top: 20px;
+  text-align: center;
+}
+
+
+/* Song Description Box */
+.song-description {
+  display: none; /* Hidden by default */
+  position: absolute; /* Absolutely positioned so it follows the cursor */
+  background-color: white;
+  color: #333;
+  padding: 10px 15px;
+  border: 2px solid #ff80ab;
+  border-radius: 10px;
+  max-width: 300px;
+  font-size: 16px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  pointer-events: none; /* Prevents the description box from blocking interactions */
+  z-index: 9999; /* Ensure it stays on top of other content */
+  opacity: 0; /* Hidden until hovered over */
+  transition: opacity 0.2s ease; /* Smooth fade-in */
+}
+
+/* When the box is visible */
+.song-description.show {
+  opacity: 1;
+}
+
+/* Styling for the horizontal scrollable Spotify track section */
+.spotify-scroll {
+  display: flex;
+  overflow-x: auto;   /* Allows horizontal scrolling */
+  gap: 20px;
+  padding: 20px 0;
+  scroll-snap-type: x mandatory;  /* Optional: Makes it snap to the next item */
+}
+
+.spotify-scroll::-webkit-scrollbar {
+  height: 8px; /* Make the scrollbar height smaller */
+}
+
+.spotify-scroll::-webkit-scrollbar-track {
+  background-color: #f1c6e2; /* Lighter pink background for the track */
+}
+
+.spotify-scroll::-webkit-scrollbar-thumb {
+  background-color: #ff66b2; /* Lighter pink color for the thumb */
+  border-radius: 10px; /* Slightly rounded edges for the thumb */
+}
+
+.spotify-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: #ff3385; /* Slightly darker pink when hovered */
+}
+
+/* Hover effect on Spotify iframe (desktop) */
+.spotify-scroll iframe {
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.spotify-scroll iframe:hover {
+  transform: scale(1.05); /* On hover, slightly scale up the iframe */
+}
+
+/* Mobile - Adjustments for tap/click functionality */
+@media (max-width: 768px) {
+  /* For mobile, use touch events (tap) to show description */
+  .spotify-scroll iframe {
+    position: relative;
+    transition: transform 0.3s ease;
+  }
+
+  .spotify-scroll iframe.clicked {
+    transform: scale(1.05); /* Maintain scaling on click */
+  }
+
+  /* Mobile - Ensure the description box is positioned correctly */
+  .song-description {
+    position: fixed;  /* Fixed position so it follows the cursor even on mobile */
+    background-color: white;
+    padding: 10px 15px;
+    border: 2px solid #ff80ab;
+    border-radius: 10px;
+    max-width: 300px;
+    font-size: 16px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease; /* Smooth fade-in effect */
+  }
+
+  /* Mobile - Show the description box when clicked */
+  .spotify-scroll iframe.active + .song-description {
+    opacity: 1; /* Show the description box */
+  }
+}
+
+/* Memory Gallery Section */
+.memory-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+  padding: 40px 20px;
+}
+
+/* Memory Item Styling */
+.memory-item {
+  text-align: center;
+  width: 280px; /* Adjusted to match Polaroid style */
+}
+
+/* Polaroid Frame Styling */
+.polaroid-frame {
+  position: relative;
+  width: 100%;
+  background-color: white;
+  border-radius: 10px;  /* Rounded corners */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding-bottom: 20px;  /* Bottom padding to give space for date */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.polaroid-frame img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+.date {
+  font-size: 0.9rem;
+  color: #777;
+  margin-top: 10px;
+  font-style: italic;
+  margin-bottom: 10px;  /* Added space beneath the date */
+}
+
+/* Caption Styling (outside the Polaroid frame) */
+.caption {
+  font-size: 1.1rem;
+  color: #444;
+  padding: 10px 20px;
+  background-color: white;
+  margin-top: 10px;
+  border: 2px solid #ff80ab;  /* Pink border */
+  border-radius: 10px;  /* Rounded corners */
+  display: inline-block;
+}
+
+/* Footer Styling */
+footer {
+  text-align: center;
+  background-color: #ff80ab; /* Soft pink background */
+  color: white;
+  padding: 20px 0;
+  margin-top: 60px;
+  font-size: 1rem;
+  font-weight: 300;
+}
+
+/* Customizing the Vertical Scrollbar */
+html, body {
+  /* Custom scrollbar styles for vertical scroll */
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: #ff66b2 #f1f1f1; /* Thumb color and track color */
+}
+
+/* Webkit browsers (Chrome, Safari, Edge) */
+html::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+}
+
+html::-webkit-scrollbar-track {
+  background-color: #f1f1f1; /* Lighter background color for the track */
+  border-radius: 10px; /* Rounded corners on the track */
+}
+
+html::-webkit-scrollbar-thumb {
+  background-color: #ff66b2; /* Lighter pink color for the thumb */
+  border-radius: 10px; /* Rounded corners on the thumb */
+}
+
+html::-webkit-scrollbar-thumb:hover {
+  background-color: #ff3385; /* Darker pink color when hovered */
+}
+
+/* For Firefox */
+body {
+  scrollbar-width: thin;
+  scrollbar-color: #ff66b2 #f1f1f1;
+}
