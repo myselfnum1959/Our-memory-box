@@ -3,6 +3,15 @@
 // ===========================
 
 const initializeMemoryUpload = () => {
+  // Password configuration
+  const CORRECT_PASSWORD = 'RhianRaniel2024'; // Password: RhianRaniel2024
+  
+  const passwordSection = document.getElementById('passwordSection');
+  const uploadFormSection = document.getElementById('uploadFormSection');
+  const passwordInput = document.getElementById('passwordInput');
+  const unlockBtn = document.getElementById('unlockBtn');
+  const passwordError = document.getElementById('passwordError');
+  
   const fileInput = document.getElementById('imageUpload');
   const fileNameDisplay = document.getElementById('fileName');
   const captionInput = document.getElementById('captionInput');
@@ -11,10 +20,51 @@ const initializeMemoryUpload = () => {
   const memoryGallery = document.querySelector('.memory-gallery');
 
   let selectedFile = null;
+  let isUnlocked = false;
+
+  // Check if already unlocked in this session
+  if (sessionStorage.getItem('uploadUnlocked') === 'true') {
+    unlockUploadForm();
+  }
 
   // Set today's date as default
   const today = new Date().toISOString().split('T')[0];
   dateInput.value = today;
+
+  // Handle password unlock
+  const checkPassword = () => {
+    const enteredPassword = passwordInput.value;
+    
+    if (enteredPassword === CORRECT_PASSWORD) {
+      unlockUploadForm();
+      sessionStorage.setItem('uploadUnlocked', 'true');
+    } else {
+      passwordError.textContent = 'Incorrect password. Try again.';
+      passwordInput.value = '';
+      passwordInput.focus();
+      
+      // Shake animation
+      passwordInput.style.animation = 'shake 0.5s';
+      setTimeout(() => {
+        passwordInput.style.animation = '';
+      }, 500);
+    }
+  };
+
+  // Unlock the upload form
+  const unlockUploadForm = () => {
+    isUnlocked = true;
+    passwordSection.style.display = 'none';
+    uploadFormSection.style.display = 'flex';
+  };
+
+  // Event listeners for password
+  unlockBtn.addEventListener('click', checkPassword);
+  passwordInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      checkPassword();
+    }
+  });
 
   // Handle file selection
   fileInput.addEventListener('change', (e) => {
@@ -41,7 +91,7 @@ const initializeMemoryUpload = () => {
 
   // Handle upload button click
   uploadBtn.addEventListener('click', () => {
-    if (!selectedFile) return;
+    if (!selectedFile || !isUnlocked) return;
 
     const reader = new FileReader();
     
