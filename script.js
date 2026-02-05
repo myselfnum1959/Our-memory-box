@@ -1,4 +1,150 @@
 // ===========================
+// MEMORY UPLOAD FEATURE
+// ===========================
+
+const initializeMemoryUpload = () => {
+  const fileInput = document.getElementById('imageUpload');
+  const fileNameDisplay = document.getElementById('fileName');
+  const captionInput = document.getElementById('captionInput');
+  const dateInput = document.getElementById('dateInput');
+  const uploadBtn = document.getElementById('uploadBtn');
+  const memoryGallery = document.querySelector('.memory-gallery');
+
+  let selectedFile = null;
+
+  // Set today's date as default
+  const today = new Date().toISOString().split('T')[0];
+  dateInput.value = today;
+
+  // Handle file selection
+  fileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      selectedFile = file;
+      fileNameDisplay.textContent = file.name;
+      checkFormValid();
+    }
+  });
+
+  // Check if form is valid
+  const checkFormValid = () => {
+    if (selectedFile && captionInput.value.trim() && dateInput.value) {
+      uploadBtn.disabled = false;
+    } else {
+      uploadBtn.disabled = true;
+    }
+  };
+
+  // Listen for input changes
+  captionInput.addEventListener('input', checkFormValid);
+  dateInput.addEventListener('change', checkFormValid);
+
+  // Handle upload button click
+  uploadBtn.addEventListener('click', () => {
+    if (!selectedFile) return;
+
+    const reader = new FileReader();
+    
+    reader.onload = (e) => {
+      const imageUrl = e.target.result;
+      const caption = captionInput.value.trim();
+      const date = new Date(dateInput.value);
+      
+      // Format date nicely
+      const formattedDate = date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+
+      // Create new memory card
+      const memoryItem = document.createElement('div');
+      memoryItem.className = 'memory-item';
+      memoryItem.innerHTML = `
+        <div class="memory-card">
+          <img src="${imageUrl}" alt="${caption}">
+          <div class="memory-info">
+            <p class="memory-caption">${caption}</p>
+            <p class="memory-date">${formattedDate}</p>
+          </div>
+        </div>
+      `;
+
+      // Add animation
+      memoryItem.style.opacity = '0';
+      memoryItem.style.transform = 'translateY(30px)';
+      
+      // Insert at the beginning of the gallery
+      memoryGallery.insertBefore(memoryItem, memoryGallery.firstChild);
+
+      // Trigger animation
+      setTimeout(() => {
+        memoryItem.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        memoryItem.style.opacity = '1';
+        memoryItem.style.transform = 'translateY(0)';
+      }, 10);
+
+      // Save to localStorage
+      saveMemoryToStorage(imageUrl, caption, formattedDate);
+
+      // Reset form
+      resetUploadForm();
+
+      // Scroll to the new memory
+      setTimeout(() => {
+        memoryItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 100);
+    };
+
+    reader.readAsDataURL(selectedFile);
+  });
+
+  // Reset form
+  const resetUploadForm = () => {
+    fileInput.value = '';
+    captionInput.value = '';
+    dateInput.value = today;
+    fileNameDisplay.textContent = 'Choose a photo';
+    selectedFile = null;
+    uploadBtn.disabled = true;
+  };
+
+  // Save memory to localStorage
+  const saveMemoryToStorage = (imageUrl, caption, date) => {
+    let memories = JSON.parse(localStorage.getItem('uploadedMemories') || '[]');
+    memories.unshift({ imageUrl, caption, date, timestamp: Date.now() });
+    localStorage.setItem('uploadedMemories', JSON.stringify(memories));
+  };
+
+  // Load saved memories on page load
+  const loadSavedMemories = () => {
+    const memories = JSON.parse(localStorage.getItem('uploadedMemories') || '[]');
+    
+    memories.forEach((memory, index) => {
+      const memoryItem = document.createElement('div');
+      memoryItem.className = 'memory-item';
+      memoryItem.innerHTML = `
+        <div class="memory-card">
+          <img src="${memory.imageUrl}" alt="${memory.caption}">
+          <div class="memory-info">
+            <p class="memory-caption">${memory.caption}</p>
+            <p class="memory-date">${memory.date}</p>
+          </div>
+        </div>
+      `;
+      
+      // Stagger animation
+      memoryItem.style.animationDelay = `${index * 0.05}s`;
+      
+      memoryGallery.insertBefore(memoryItem, memoryGallery.firstChild);
+    });
+  };
+
+  // Load saved memories on initialization
+  loadSavedMemories();
+};
+
+// ===========================
 // SPOTIFY DESCRIPTION TOOLTIP
 // ===========================
 
@@ -204,6 +350,7 @@ const initializeSmoothScroll = () => {
 // ===========================
 
 const init = () => {
+  initializeMemoryUpload();
   initializeSpotifyTooltips();
   initializeCounter();
   initializeScrollAnimations();
