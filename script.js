@@ -1,78 +1,218 @@
-// Select all iframe elements inside the .spotify-scroll container
-const iframes = document.querySelectorAll('.spotify-scroll iframe');
+// ===========================
+// SPOTIFY DESCRIPTION TOOLTIP
+// ===========================
 
-// Function to create and display the description box
-const createDescriptionBox = () => {
-  const descriptionBox = document.createElement('div');
-  descriptionBox.classList.add('song-description');
-  document.body.appendChild(descriptionBox);  // Append to body for visibility on top
-  return descriptionBox;
-};
+const initializeSpotifyTooltips = () => {
+  const spotifyCards = document.querySelectorAll('.spotify-card');
+  const descriptionBox = document.querySelector('.song-description');
+  
+  if (!descriptionBox) return;
 
-// Create the description box once (since we only need one that moves with the cursor)
-const descriptionBox = createDescriptionBox();
+  let currentCard = null;
 
-// Function to show the description box and update its position
-const showDescription = (iframe) => {
-  const description = iframe.getAttribute('data-description');
-  descriptionBox.textContent = description; // Set description text
+  // Function to show description
+  const showDescription = (card, description) => {
+    descriptionBox.textContent = description;
+    descriptionBox.classList.add('show');
+    currentCard = card;
+  };
 
-  // Show the description box
-  descriptionBox.style.display = 'block';
-  descriptionBox.classList.add('show');  // Add show class to fade it in
-};
+  // Function to hide description
+  const hideDescription = () => {
+    descriptionBox.classList.remove('show');
+    currentCard = null;
+  };
 
-// Function to hide the description box
-const hideDescription = () => {
-  descriptionBox.style.display = 'none';  // Hide the description box
-  descriptionBox.classList.remove('show'); // Fade out the description box
-};
+  // Function to update tooltip position
+  const updatePosition = (e) => {
+    const x = e.clientX || e.touches?.[0]?.clientX;
+    const y = e.clientY || e.touches?.[0]?.clientY;
+    
+    if (x && y) {
+      const offset = 20;
+      const boxWidth = descriptionBox.offsetWidth;
+      const boxHeight = descriptionBox.offsetHeight;
+      
+      // Prevent tooltip from going off-screen
+      let left = x + offset;
+      let top = y + offset;
+      
+      if (left + boxWidth > window.innerWidth) {
+        left = x - boxWidth - offset;
+      }
+      
+      if (top + boxHeight > window.innerHeight) {
+        top = y - boxHeight - offset;
+      }
+      
+      descriptionBox.style.left = `${left}px`;
+      descriptionBox.style.top = `${top}px`;
+    }
+  };
 
-// Function to update the position of the description box
-const moveDescription = (e) => {
-  const mouseX = e.pageX;
-  const mouseY = e.pageY;
+  // Add event listeners to each Spotify card
+  spotifyCards.forEach(card => {
+    const iframe = card.querySelector('iframe');
+    if (!iframe) return;
 
-  // Update position relative to the cursor with a slight offset
-  descriptionBox.style.left = `${mouseX + 15}px`; // 15px offset to the right of the cursor
-  descriptionBox.style.top = `${mouseY + 15}px`;  // 15px offset below the cursor
-};
+    const description = iframe.getAttribute('data-description');
+    if (!description) return;
 
-// Loop through each iframe and add event listeners
-iframes.forEach(iframe => {
-  // Hover effect for desktop (shows description)
-  iframe.addEventListener('mouseover', () => {
-    showDescription(iframe);
+    // Desktop: Mouse events
+    card.addEventListener('mouseenter', () => {
+      showDescription(card, description);
+    });
+
+    card.addEventListener('mouseleave', () => {
+      hideDescription();
+    });
+
+    card.addEventListener('mousemove', updatePosition);
+
+    // Mobile: Touch events
+    card.addEventListener('touchstart', (e) => {
+      if (currentCard === card) {
+        hideDescription();
+      } else {
+        showDescription(card, description);
+        updatePosition(e);
+      }
+    });
   });
 
-  // Mouse out event for hiding the description box
-  iframe.addEventListener('mouseout', () => {
-    hideDescription();
-  });
-
-  // Mouse move event to follow the cursor
-  iframe.addEventListener('mousemove', (e) => {
-    moveDescription(e);
-  });
-
-  // Click event for mobile to toggle description visibility
-  iframe.addEventListener('click', (e) => {
-    // Toggle visibility when clicked
-    if (descriptionBox.style.display === 'none') {
-      showDescription(iframe);
-    } else {
+  // Hide tooltip when clicking/touching elsewhere
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.spotify-card')) {
       hideDescription();
     }
-    // Prevent event from bubbling to avoid accidental hiding
-    e.stopPropagation();
   });
-});
 
-// Ensure description box always follows the cursor globally
-document.addEventListener('mousemove', (e) => {
-  // Only update position when the description box is visible
-  if (descriptionBox.style.display === 'block') {
-    moveDescription(e);
-  }
-});
+  // Update position on scroll
+  window.addEventListener('scroll', () => {
+    if (currentCard) {
+      hideDescription();
+    }
+  });
+};
 
+// ===========================
+// TIME COUNTER
+// ===========================
+
+const initializeCounter = () => {
+  const anniversaryDate = new Date('2024-10-18T00:00:00');
+  
+  const updateCounter = () => {
+    const currentDate = new Date();
+    const diffInMs = currentDate - anniversaryDate;
+    
+    // Calculate time components
+    const msPerSecond = 1000;
+    const msPerMinute = msPerSecond * 60;
+    const msPerHour = msPerMinute * 60;
+    const msPerDay = msPerHour * 24;
+    const msPerMonth = msPerDay * 30.44; // Average month length
+    const msPerYear = msPerDay * 365.25; // Account for leap years
+    
+    const years = Math.floor(diffInMs / msPerYear);
+    const months = Math.floor((diffInMs % msPerYear) / msPerMonth);
+    const days = Math.floor((diffInMs % msPerMonth) / msPerDay);
+    const hours = Math.floor((diffInMs % msPerDay) / msPerHour);
+    const minutes = Math.floor((diffInMs % msPerHour) / msPerMinute);
+    const seconds = Math.floor((diffInMs % msPerMinute) / msPerSecond);
+    
+    // Update DOM elements
+    const updateElement = (id, value) => {
+      const element = document.getElementById(id);
+      if (element) element.textContent = value.toString().padStart(2, '0');
+    };
+    
+    updateElement('years', years);
+    updateElement('months', months);
+    updateElement('days', days);
+    updateElement('hours', hours);
+    updateElement('minutes', minutes);
+    updateElement('seconds', seconds);
+    
+    // Calculate total monthsaries and anniversaries
+    const totalMonths = Math.floor(diffInMs / msPerMonth);
+    const totalYears = years;
+    
+    const counterDetails = document.getElementById('counterDetails');
+    if (counterDetails) {
+      const anniversaryText = totalYears === 1 ? 'anniversary' : 'anniversaries';
+      const monthsaryText = totalMonths === 1 ? 'monthsary' : 'monthsaries';
+      counterDetails.textContent = `That's ${totalYears} ${anniversaryText} and ${totalMonths} ${monthsaryText}!`;
+    }
+  };
+  
+  // Update immediately and then every second
+  updateCounter();
+  setInterval(updateCounter, 1000);
+};
+
+// ===========================
+// SCROLL ANIMATIONS
+// ===========================
+
+const initializeScrollAnimations = () => {
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, observerOptions);
+
+  // Observe all memory items
+  const memoryItems = document.querySelectorAll('.memory-item');
+  memoryItems.forEach(item => {
+    item.style.opacity = '0';
+    item.style.transform = 'translateY(30px)';
+    item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(item);
+  });
+};
+
+// ===========================
+// SMOOTH SCROLL FOR ANCHOR LINKS
+// ===========================
+
+const initializeSmoothScroll = () => {
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    });
+  });
+};
+
+// ===========================
+// INITIALIZE ALL FEATURES
+// ===========================
+
+const init = () => {
+  initializeSpotifyTooltips();
+  initializeCounter();
+  initializeScrollAnimations();
+  initializeSmoothScroll();
+};
+
+// Run when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
