@@ -43,270 +43,233 @@
 
         <section class="soundtrack-section section-block" id="soundtrack" aria-labelledby="soundtrack-title">
             <div class="section-container">
-                <div class="section-heading-row">
+                <div class="vinyl-section-heading">
                     <div class="section-heading">
+                        <p class="vinyl-kicker">SIDE A · A LITTLE COLLECTION</p>
                         <h2 id="soundtrack-title">Our Soundtrack</h2>
-                        <p class="section-subtitle">The songs that tell our story</p>
+                        <p class="section-subtitle">A few songs that feel like us.</p>
+                    </div>
+                    <span class="vinyl-total"><span>16</span> songs<br>kept close</span>
+                </div>
+
+                <div class="turntable" aria-label="Vinyl record player">
+                    <div class="turntable-deck">
+                        <div class="deck-topline"><span>R + R</span><span>33⅓ RPM</span></div>
+                        <div class="platter" aria-hidden="true">
+                            <div class="platter-rim"></div>
+                            <div class="vinyl-record" id="featured-record" style="--label-color: #d9a08b;">
+                                <div class="record-sheen"></div>
+                                <div class="record-label">
+                                    <span class="record-label-mark">R<span>+</span>R</span>
+                                    <span class="record-label-number" id="featured-record-number">01</span>
+                                    <span class="record-label-line"></span>
+                                    <span class="record-label-small">PERSONAL PRESSING</span>
+                                </div>
+                            </div>
+                            <div class="album-sleeve" id="active-album-sleeve">
+                                <img class="album-cover-image" id="active-album-cover" alt="" decoding="async">
+                                <div class="album-cover-fallback" aria-hidden="true">
+                                    <span class="cover-overline">MEMORY BOX RECORDS</span>
+                                    <span class="cover-song-title" id="album-cover-fallback-title">Araw-Araw</span>
+                                    <span class="cover-rule"></span>
+                                    <span class="cover-track-number" id="album-cover-fallback-number">01</span>
+                                </div>
+                                <span class="album-sleeve-edge" aria-hidden="true"></span>
+                            </div>
+                            <div class="tonearm" aria-hidden="true">
+                                <span class="tonearm-pivot"></span>
+                                <span class="tonearm-bar"></span>
+                                <span class="tonearm-head"></span>
+                            </div>
+                        </div>
+                        <div class="deck-bottomline"><span>MEMORY BOX RECORDS</span><span>EST. 2024</span></div>
+                    </div>
+
+                    <div class="turntable-info">
+                        <div class="track-status"><span class="status-dot"></span><span>ON THE TURNTABLE</span><span class="track-position" id="active-track-position">01 / 16</span></div>
+                        <h3 class="active-track-title" id="active-track-title">Araw-Araw</h3>
+                        <p class="active-track-note" id="active-track-note">Walang araw na hindi kita pinili.</p>
+                        <div class="spotify-player-frame">
+                            <div class="spotify-player-caption"><span>LISTEN ON SPOTIFY</span><span>↗</span></div>
+                            <iframe class="soundtrack-embed"
+                                title="Listen to Araw-Araw on Spotify"
+                                src="https://open.spotify.com/embed/track/7DUmSBR4QzlTdlsIVo62ra?utm_source=generator&amp;theme=0"
+                                width="100%" height="152" frameborder="0" allowfullscreen
+                                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                                loading="lazy"></iframe>
+                        </div>
+                        <div class="track-stepper">
+                            <button type="button" id="previous-track" aria-label="Previous song"><span aria-hidden="true">←</span> Previous</button>
+                            <button type="button" id="next-track" aria-label="Next song">Next <span aria-hidden="true">→</span></button>
+                        </div>
                     </div>
                 </div>
-                <div class="spotify-scroll" aria-label="Our soundtrack. Scroll horizontally to browse songs">
-                    
-            <article class="spotify-card" aria-label="Araw-Araw">
-                <div class="track-heading">
-                    <span class="track-index">01</span>
-                    <span class="track-name">Araw-Araw</span>
+
+                <div class="record-collection-heading">
+                    <span>Pick a record</span>
+                    <span>SCROLL TO BROWSE</span>
                 </div>
-                <iframe
-                    title="Listen to Araw-Araw on Spotify"
-                    src="https://open.spotify.com/embed/track/7DUmSBR4QzlTdlsIVo62ra?utm_source=generator&amp;theme=0"
-                    width="100%"
-                    height="152"
-                    frameborder="0"
-                    allowfullscreen
-                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                    loading="lazy"
-                    data-description="Walang araw na hindi kita pinili."></iframe>
-            </article>
-            <article class="spotify-card" aria-label="Iris">
-                <div class="track-heading">
-                    <span class="track-index">02</span>
-                    <span class="track-name">Iris</span>
-                </div>
-                <iframe
-                    title="Listen to Iris on Spotify"
-                    src="https://open.spotify.com/embed/track/6Qyc6fS4DsZjB2mRW9DsQs?utm_source=generator&amp;theme=0"
-                    width="100%"
-                    height="152"
-                    frameborder="0"
-                    allowfullscreen
-                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                    loading="lazy"
-                    data-description="You&#x27;re the closest to heaven that I&#x27;ll ever be."></iframe>
-            </article>
-            <article class="spotify-card" aria-label="About you">
-                <div class="track-heading">
-                    <span class="track-index">03</span>
-                    <span class="track-name">About you</span>
-                </div>
-                <iframe
-                    title="Listen to About you on Spotify"
-                    src="https://open.spotify.com/embed/track/1fDFHXcykq4iw8Gg7s5hG9?utm_source=generator&amp;theme=0"
-                    width="100%"
-                    height="152"
-                    frameborder="0"
-                    allowfullscreen
-                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                    loading="lazy"
-                    data-description="It is always going to be you."></iframe>
-            </article>
-            <article class="spotify-card" aria-label="Pasilyo">
-                <div class="track-heading">
-                    <span class="track-index">04</span>
-                    <span class="track-name">Pasilyo</span>
-                </div>
-                <iframe
-                    title="Listen to Pasilyo on Spotify"
-                    src="https://open.spotify.com/embed/track/0uZFcsx96wzbixsULmrg8o?utm_source=generator&amp;theme=0"
-                    width="100%"
-                    height="152"
-                    frameborder="0"
-                    allowfullscreen
-                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                    loading="lazy"
-                    data-description="Ikaw at ikaw."></iframe>
-            </article>
-            <article class="spotify-card" aria-label="Nakauwi na">
-                <div class="track-heading">
-                    <span class="track-index">05</span>
-                    <span class="track-name">Nakauwi na</span>
-                </div>
-                <iframe
-                    title="Listen to Nakauwi na on Spotify"
-                    src="https://open.spotify.com/embed/track/7pCKOeBRkfJb61ImYU2qKu?utm_source=generator&amp;theme=0"
-                    width="100%"
-                    height="152"
-                    frameborder="0"
-                    allowfullscreen
-                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                    loading="lazy"
-                    data-description="Makasama lang kita, nakauwi nako."></iframe>
-            </article>
-            <article class="spotify-card" aria-label="Milkyway">
-                <div class="track-heading">
-                    <span class="track-index">06</span>
-                    <span class="track-name">Milkyway</span>
-                </div>
-                <iframe
-                    title="Listen to Milkyway on Spotify"
-                    src="https://open.spotify.com/embed/track/3QrQsWbuMYaI4q4uDiiGpk?utm_source=generator&amp;theme=0"
-                    width="100%"
-                    height="152"
-                    frameborder="0"
-                    allowfullscreen
-                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                    loading="lazy"
-                    data-description="I&#x27;m glad I share a universe with you mahal ❤"></iframe>
-            </article>
-            <article class="spotify-card" aria-label="Understand">
-                <div class="track-heading">
-                    <span class="track-index">07</span>
-                    <span class="track-name">Understand</span>
-                </div>
-                <iframe
-                    title="Listen to Understand on Spotify"
-                    src="https://open.spotify.com/embed/track/72sfmdpuO5r8cBDgs7MqZZ?utm_source=generator&amp;theme=0"
-                    width="100%"
-                    height="152"
-                    frameborder="0"
-                    allowfullscreen
-                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                    loading="lazy"
-                    data-description="I really never thought I&#x27;d never find this kind of love pero andyan ka lang pala sa paligid. Ikaw lang din ang nakakagets sa kwentong meron ako sa buhay ko."></iframe>
-            </article>
-            <article class="spotify-card" aria-label="K.">
-                <div class="track-heading">
-                    <span class="track-index">08</span>
-                    <span class="track-name">K.</span>
-                </div>
-                <iframe
-                    title="Listen to K. on Spotify"
-                    src="https://open.spotify.com/embed/track/1FWsomP9StpCcXNWmJk8Cl?utm_source=generator&amp;theme=0"
-                    width="100%"
-                    height="152"
-                    frameborder="0"
-                    allowfullscreen
-                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                    loading="lazy"
-                    data-description="I remember when I first noticed that you liked me back"></iframe>
-            </article>
-            <article class="spotify-card" aria-label="14">
-                <div class="track-heading">
-                    <span class="track-index">09</span>
-                    <span class="track-name">14</span>
-                </div>
-                <iframe
-                    title="Listen to 14 on Spotify"
-                    src="https://open.spotify.com/embed/track/7KD8oUUpidul2ROxTIhPAw?utm_source=generator&amp;theme=0"
-                    width="100%"
-                    height="152"
-                    frameborder="0"
-                    allowfullscreen
-                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                    loading="lazy"
-                    data-description="Ikaw lang ang nais kong makasama at wala na kong gusto pang balikan."></iframe>
-            </article>
-            <article class="spotify-card" aria-label="You&#x27;ll be safe here">
-                <div class="track-heading">
-                    <span class="track-index">10</span>
-                    <span class="track-name">You&#x27;ll be safe here</span>
-                </div>
-                <iframe
-                    title="Listen to You&#x27;ll be safe here on Spotify"
-                    src="https://open.spotify.com/embed/track/0IuKNTVgn9vapnGU44natX?utm_source=generator&amp;theme=0"
-                    width="100%"
-                    height="152"
-                    frameborder="0"
-                    allowfullscreen
-                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                    loading="lazy"
-                    data-description="Don&#x27;t be scared anymore, nandito nako."></iframe>
-            </article>
-            <article class="spotify-card" aria-label="Habang Buhay">
-                <div class="track-heading">
-                    <span class="track-index">11</span>
-                    <span class="track-name">Habang Buhay</span>
-                </div>
-                <iframe
-                    title="Listen to Habang Buhay on Spotify"
-                    src="https://open.spotify.com/embed/track/1tC2PLqLeJXt0VlgOYpc6m?utm_source=generator&amp;theme=0"
-                    width="100%"
-                    height="152"
-                    frameborder="0"
-                    allowfullscreen
-                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                    loading="lazy"
-                    data-description="Dito ka nalang sakin habang buhay huh? :)"></iframe>
-            </article>
-            <article class="spotify-card" aria-label="Yellow">
-                <div class="track-heading">
-                    <span class="track-index">12</span>
-                    <span class="track-name">Yellow</span>
-                </div>
-                <iframe
-                    title="Listen to Yellow on Spotify"
-                    src="https://open.spotify.com/embed/track/3AJwUDP919kvQ9QcozQPxg?utm_source=generator&amp;theme=0"
-                    width="100%"
-                    height="152"
-                    frameborder="0"
-                    allowfullscreen
-                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                    loading="lazy"
-                    data-description="A yellow is someone who saves you from being alone, And someone who does everything for you reason for your smile. You&#x27;re my yellow, mahal."></iframe>
-            </article>
-            <article class="spotify-card" aria-label="Bawat daan">
-                <div class="track-heading">
-                    <span class="track-index">13</span>
-                    <span class="track-name">Bawat daan</span>
-                </div>
-                <iframe
-                    title="Listen to Bawat daan on Spotify"
-                    src="https://open.spotify.com/embed/track/1hJtJvPX9knMysNDQw0HDJ?utm_source=generator&amp;theme=0"
-                    width="100%"
-                    height="152"
-                    frameborder="0"
-                    allowfullscreen
-                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                    loading="lazy"
-                    data-description="Bawat kanan at kaliwa, kung timog man o hilaga ang bawat daan ko ay patungo, ay pabalik sayo. ❤"></iframe>
-            </article>
-            <article class="spotify-card" aria-label="You&#x27;ll be in my heart">
-                <div class="track-heading">
-                    <span class="track-index">14</span>
-                    <span class="track-name">You&#x27;ll be in my heart</span>
-                </div>
-                <iframe
-                    title="Listen to You&#x27;ll be in my heart on Spotify"
-                    src="https://open.spotify.com/embed/track/1UPB5rYJ0bzn6mNSoAHrZC?utm_source=generator&amp;theme=0"
-                    width="100%"
-                    height="152"
-                    frameborder="0"
-                    allowfullscreen
-                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                    loading="lazy"
-                    data-description="You&#x27;ll be in my heart, no matter what they say!"></iframe>
-            </article>
-            <article class="spotify-card" aria-label="Through Your Eyes">
-                <div class="track-heading">
-                    <span class="track-index">15</span>
-                    <span class="track-name">Through Your Eyes</span>
-                </div>
-                <iframe
-                    title="Listen to Through Your Eyes on Spotify"
-                    src="https://open.spotify.com/embed/track/11hEwcy9LMEvzAlOYAFhkK?utm_source=generator&amp;theme=0"
-                    width="100%"
-                    height="152"
-                    frameborder="0"
-                    allowfullscreen
-                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                    loading="lazy"
-                    data-description="Through your eyes I see, the smile you bring to me"></iframe>
-            </article>
-            <article class="spotify-card" aria-label="Ikaw lang patutunguhan">
-                <div class="track-heading">
-                    <span class="track-index">16</span>
-                    <span class="track-name">Ikaw lang patutunguhan</span>
-                </div>
-                <iframe
-                    title="Listen to Ikaw lang patutunguhan on Spotify"
-                    src="https://open.spotify.com/embed/track/7rpQzmMwS1yW1f0oWxBS9z?utm_source=generator&amp;theme=0"
-                    width="100%"
-                    height="152"
-                    frameborder="0"
-                    allowfullscreen
-                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                    loading="lazy"
-                    data-description="There&#x27;s always a way to you."></iframe>
-            </article>
+                <div class="record-rack" id="record-rack" role="group" aria-label="Choose a song">
+                    <button class="record-choice is-selected" type="button"
+                        data-track-id="7DUmSBR4QzlTdlsIVo62ra" data-track-title="Araw-Araw"
+                        data-track-note="Walang araw na hindi kita pinili." data-track-number="01"
+                        data-label-color="#d9a08b" style="--label-color: #d9a08b;" aria-pressed="true"
+                        aria-label="Play Araw-Araw">
+                        <span class="mini-vinyl" aria-hidden="true">
+                            <span class="mini-label"><span>01</span></span>
+                        </span>
+                        <span class="record-choice-name">Araw-Araw</span>
+                    </button>
+                    <button class="record-choice" type="button"
+                        data-track-id="6Qyc6fS4DsZjB2mRW9DsQs" data-track-title="Iris"
+                        data-track-note="You&#x27;re the closest to heaven that I&#x27;ll ever be." data-track-number="02"
+                        data-label-color="#b8c1a5" style="--label-color: #b8c1a5;" aria-pressed="false"
+                        aria-label="Play Iris">
+                        <span class="mini-vinyl" aria-hidden="true">
+                            <span class="mini-label"><span>02</span></span>
+                        </span>
+                        <span class="record-choice-name">Iris</span>
+                    </button>
+                    <button class="record-choice" type="button"
+                        data-track-id="1fDFHXcykq4iw8Gg7s5hG9" data-track-title="About you"
+                        data-track-note="It is always going to be you." data-track-number="03"
+                        data-label-color="#d8c6a4" style="--label-color: #d8c6a4;" aria-pressed="false"
+                        aria-label="Play About you">
+                        <span class="mini-vinyl" aria-hidden="true">
+                            <span class="mini-label"><span>03</span></span>
+                        </span>
+                        <span class="record-choice-name">About you</span>
+                    </button>
+                    <button class="record-choice" type="button"
+                        data-track-id="0uZFcsx96wzbixsULmrg8o" data-track-title="Pasilyo"
+                        data-track-note="Ikaw at ikaw." data-track-number="04"
+                        data-label-color="#b5c7d2" style="--label-color: #b5c7d2;" aria-pressed="false"
+                        aria-label="Play Pasilyo">
+                        <span class="mini-vinyl" aria-hidden="true">
+                            <span class="mini-label"><span>04</span></span>
+                        </span>
+                        <span class="record-choice-name">Pasilyo</span>
+                    </button>
+                    <button class="record-choice" type="button"
+                        data-track-id="7pCKOeBRkfJb61ImYU2qKu" data-track-title="Nakauwi na"
+                        data-track-note="Makasama lang kita, nakauwi nako." data-track-number="05"
+                        data-label-color="#c9a8a5" style="--label-color: #c9a8a5;" aria-pressed="false"
+                        aria-label="Play Nakauwi na">
+                        <span class="mini-vinyl" aria-hidden="true">
+                            <span class="mini-label"><span>05</span></span>
+                        </span>
+                        <span class="record-choice-name">Nakauwi na</span>
+                    </button>
+                    <button class="record-choice" type="button"
+                        data-track-id="3QrQsWbuMYaI4q4uDiiGpk" data-track-title="Milkyway"
+                        data-track-note="I&#x27;m glad I share a universe with you mahal ❤" data-track-number="06"
+                        data-label-color="#aeb7a0" style="--label-color: #aeb7a0;" aria-pressed="false"
+                        aria-label="Play Milkyway">
+                        <span class="mini-vinyl" aria-hidden="true">
+                            <span class="mini-label"><span>06</span></span>
+                        </span>
+                        <span class="record-choice-name">Milkyway</span>
+                    </button>
+                    <button class="record-choice" type="button"
+                        data-track-id="72sfmdpuO5r8cBDgs7MqZZ" data-track-title="Understand"
+                        data-track-note="I really never thought I&#x27;d never find this kind of love pero andyan ka lang pala sa paligid. Ikaw lang din ang nakakagets sa kwentong meron ako sa buhay ko." data-track-number="07"
+                        data-label-color="#c7b4d6" style="--label-color: #c7b4d6;" aria-pressed="false"
+                        aria-label="Play Understand">
+                        <span class="mini-vinyl" aria-hidden="true">
+                            <span class="mini-label"><span>07</span></span>
+                        </span>
+                        <span class="record-choice-name">Understand</span>
+                    </button>
+                    <button class="record-choice" type="button"
+                        data-track-id="1FWsomP9StpCcXNWmJk8Cl" data-track-title="K."
+                        data-track-note="I remember when I first noticed that you liked me back" data-track-number="08"
+                        data-label-color="#d4bb8d" style="--label-color: #d4bb8d;" aria-pressed="false"
+                        aria-label="Play K.">
+                        <span class="mini-vinyl" aria-hidden="true">
+                            <span class="mini-label"><span>08</span></span>
+                        </span>
+                        <span class="record-choice-name">K.</span>
+                    </button>
+                    <button class="record-choice" type="button"
+                        data-track-id="7KD8oUUpidul2ROxTIhPAw" data-track-title="14"
+                        data-track-note="Ikaw lang ang nais kong makasama at wala na kong gusto pang balikan." data-track-number="09"
+                        data-label-color="#a9bec0" style="--label-color: #a9bec0;" aria-pressed="false"
+                        aria-label="Play 14">
+                        <span class="mini-vinyl" aria-hidden="true">
+                            <span class="mini-label"><span>09</span></span>
+                        </span>
+                        <span class="record-choice-name">14</span>
+                    </button>
+                    <button class="record-choice" type="button"
+                        data-track-id="0IuKNTVgn9vapnGU44natX" data-track-title="You&#x27;ll be safe here"
+                        data-track-note="Don&#x27;t be scared anymore, nandito nako." data-track-number="10"
+                        data-label-color="#d7a77e" style="--label-color: #d7a77e;" aria-pressed="false"
+                        aria-label="Play You&#x27;ll be safe here">
+                        <span class="mini-vinyl" aria-hidden="true">
+                            <span class="mini-label"><span>10</span></span>
+                        </span>
+                        <span class="record-choice-name">You&#x27;ll be safe here</span>
+                    </button>
+                    <button class="record-choice" type="button"
+                        data-track-id="1tC2PLqLeJXt0VlgOYpc6m" data-track-title="Habang Buhay"
+                        data-track-note="Dito ka nalang sakin habang buhay huh? :)" data-track-number="11"
+                        data-label-color="#c6a3a0" style="--label-color: #c6a3a0;" aria-pressed="false"
+                        aria-label="Play Habang Buhay">
+                        <span class="mini-vinyl" aria-hidden="true">
+                            <span class="mini-label"><span>11</span></span>
+                        </span>
+                        <span class="record-choice-name">Habang Buhay</span>
+                    </button>
+                    <button class="record-choice" type="button"
+                        data-track-id="3AJwUDP919kvQ9QcozQPxg" data-track-title="Yellow"
+                        data-track-note="A yellow is someone who saves you from being alone, And someone who does everything for you reason for your smile. You&#x27;re my yellow, mahal." data-track-number="12"
+                        data-label-color="#c5b79a" style="--label-color: #c5b79a;" aria-pressed="false"
+                        aria-label="Play Yellow">
+                        <span class="mini-vinyl" aria-hidden="true">
+                            <span class="mini-label"><span>12</span></span>
+                        </span>
+                        <span class="record-choice-name">Yellow</span>
+                    </button>
+                    <button class="record-choice" type="button"
+                        data-track-id="1hJtJvPX9knMysNDQw0HDJ" data-track-title="Bawat daan"
+                        data-track-note="Bawat kanan at kaliwa, kung timog man o hilaga ang bawat daan ko ay patungo, ay pabalik sayo. ❤" data-track-number="13"
+                        data-label-color="#b5bea4" style="--label-color: #b5bea4;" aria-pressed="false"
+                        aria-label="Play Bawat daan">
+                        <span class="mini-vinyl" aria-hidden="true">
+                            <span class="mini-label"><span>13</span></span>
+                        </span>
+                        <span class="record-choice-name">Bawat daan</span>
+                    </button>
+                    <button class="record-choice" type="button"
+                        data-track-id="1UPB5rYJ0bzn6mNSoAHrZC" data-track-title="You&#x27;ll be in my heart"
+                        data-track-note="You&#x27;ll be in my heart, no matter what they say!" data-track-number="14"
+                        data-label-color="#d0b4a1" style="--label-color: #d0b4a1;" aria-pressed="false"
+                        aria-label="Play You&#x27;ll be in my heart">
+                        <span class="mini-vinyl" aria-hidden="true">
+                            <span class="mini-label"><span>14</span></span>
+                        </span>
+                        <span class="record-choice-name">You&#x27;ll be in my heart</span>
+                    </button>
+                    <button class="record-choice" type="button"
+                        data-track-id="11hEwcy9LMEvzAlOYAFhkK" data-track-title="Through Your Eyes"
+                        data-track-note="Through your eyes I see, the smile you bring to me" data-track-number="15"
+                        data-label-color="#b5acc8" style="--label-color: #b5acc8;" aria-pressed="false"
+                        aria-label="Play Through Your Eyes">
+                        <span class="mini-vinyl" aria-hidden="true">
+                            <span class="mini-label"><span>15</span></span>
+                        </span>
+                        <span class="record-choice-name">Through Your Eyes</span>
+                    </button>
+                    <button class="record-choice" type="button"
+                        data-track-id="7rpQzmMwS1yW1f0oWxBS9z" data-track-title="Ikaw lang patutunguhan"
+                        data-track-note="There&#x27;s always a way to you." data-track-number="16"
+                        data-label-color="#c7b8a4" style="--label-color: #c7b8a4;" aria-pressed="false"
+                        aria-label="Play Ikaw lang patutunguhan">
+                        <span class="mini-vinyl" aria-hidden="true">
+                            <span class="mini-label"><span>16</span></span>
+                        </span>
+                        <span class="record-choice-name">Ikaw lang patutunguhan</span>
+                    </button>
                 </div>
             </div>
         </section>
@@ -556,10 +519,7 @@
             </div>
         </section>
     </main>
-
-    <div class="song-description" role="tooltip" aria-live="polite"></div>
-
-    <dialog class="memory-lightbox" id="memoryLightbox" aria-label="Memory photo viewer">
+<dialog class="memory-lightbox" id="memoryLightbox" aria-label="Memory photo viewer">
         <button class="lightbox-close" type="button" aria-label="Close photo viewer">×</button>
         <button class="lightbox-arrow lightbox-prev" type="button" aria-label="Previous memory">←</button>
         <figure class="lightbox-figure">
