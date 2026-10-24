@@ -5,82 +5,113 @@
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Show the personal note attached to each song player.
-    const initializeSpotifyTooltips = () => {
-        const cards = document.querySelectorAll('.spotify-card');
-        const tooltip = document.querySelector('.song-description');
-        if (!cards.length || !tooltip) return;
-
-        let activeCard = null;
-
-        const positionTooltip = (event) => {
-            const point = event.touches?.[0] || event.changedTouches?.[0] || event;
-            const x = point.clientX;
-            const y = point.clientY;
-            if (!Number.isFinite(x) || !Number.isFinite(y)) return;
-
-            const edge = 14;
-            const offset = 18;
-            const width = tooltip.offsetWidth;
-            const height = tooltip.offsetHeight;
-            let left = x + offset;
-            let top = y + offset;
-
-            if (left + width > window.innerWidth - edge) left = x - width - offset;
-            if (top + height > window.innerHeight - edge) top = y - height - offset;
-
-            left = Math.max(edge, Math.min(left, window.innerWidth - width - edge));
-            top = Math.max(edge, Math.min(top, window.innerHeight - height - edge));
-            tooltip.style.left = `${left}px`;
-            tooltip.style.top = `${top}px`;
-        };
-
-        const hideTooltip = () => {
-            tooltip.classList.remove('show');
-            activeCard = null;
-        };
-
-        const showTooltip = (card, event) => {
-            const iframe = card.querySelector('iframe');
-            const description = iframe?.dataset.description?.trim();
-            if (!description) return;
-            tooltip.textContent = description;
-            tooltip.classList.add('show');
-            activeCard = card;
-            if (event) positionTooltip(event);
-        };
-
-        cards.forEach((card) => {
-            const iframe = card.querySelector('iframe');
-            if (!iframe?.dataset.description) return;
-
-            card.addEventListener('mouseenter', (event) => {
-                if (event.pointerType === 'touch') return;
-                showTooltip(card, event);
+    // Select a record to change the label, personal note, and Spotify track.
+    const initializeVinylPlayer = () => {
+        const choices = Array.from(document.querySelectorAll('.record-choice'));
+        const record = document.getElementById('featured-record');
+        const recordNumber = document.getElementById('featured-record-number');
+        const albumCover = document.getElementById('active-album-cover');
+        const albumSleeve = document.getElementById('active-album-sleeve');
+        const albumFallbackTitle = document.getElementById('album-cover-fallback-title');
+        const albumFallbackNumber = document.getElementById('album-cover-fallback-number');
+        const artworkCache = new Map();
+        const miniArtwork = (trackId, imageUrl) => {
+            choices.filter((item) => item.dataset.trackId === trackId).forEach((item) => {
+                const label = item.querySelector('.mini-label');
+                if (!label) return;
+                label.style.backgroundImage = `url(\"${imageUrl}\")`;
+                label.classList.add('has-artwork');
             });
-            card.addEventListener('mousemove', (event) => {
-                if (activeCard === card) positionTooltip(event);
-            });
-            card.addEventListener('mouseleave', hideTooltip);
+        };
+        const title = document.getElementById('active-track-title');
+        const note = document.getElementById('active-track-note');
+        const position = document.getElementById('active-track-position');
+        const player = document.querySelector('.soundtrack-embed');
+        const previous = document.getElementById('previous-track');
+        const next = document.getElementById('next-track');
+        if (!choices.length || !record || !recordNumber || !title || !note || !position || !player) return;
 
-            // Touch notes appear briefly without preventing interaction with Spotify.
-            card.addEventListener('touchstart', (event) => {
-                if (activeCard === card) {
-                    hideTooltip();
+        let activeIndex = Math.max(0, choices.findIndex((choice) => choice.getAttribute('aria-pressed') === 'true'));
+        const selectTrack = (index, animate = true) => {
+            activeIndex = (index + choices.length) % choices.length;
+            const choice = choices[activeIndex];
+            const trackId = choice.dataset.trackId;
+            const trackTitle = choice.dataset.trackTitle || 'Untitled';
+            const trackNote = choice.dataset.trackNote || '';
+            const trackNumber = choice.dataset.trackNumber || String(activeIndex + 1).padStart(2, '0');
+
+            choices.forEach((item, itemIndex) => {
+                const selected = itemIndex === activeIndex;
+                item.classList.toggle('is-selected', selected);
+                item.setAttribute('aria-pressed', String(selected));
+            });
+
+            title.textContent = trackTitle;
+            note.textContent = trackNote;
+            note.hidden = !trackNote;
+            position.textContent = `${trackNumber} / ${String(choices.length).padStart(2, '0')}`;
+            recordNumber.textContent = trackNumber;
+            const labelColor = choice.dataset.labelColor || '#d9a08b';
+            record.style.setProperty('--label-color', labelColor);
+            if (albumSleeve) albumSleeve.style.setProperty('--label-color', labelColor);
+            record.setAttribute('aria-label', `Vinyl record for ${trackTitle}`);
+            player.title = `Listen to ${trackTitle} on Spotify`;
+
+            // Spotify's public oEmbed endpoint supplies the track's real album artwork.
+            // Keep a designed paper sleeve visible as a graceful fallback if it is unavailable.
+            if (albumCover && albumSleeve) {
+                albumCover.dataset.trackId = trackId;
+                albumSleeve.classList.remove('has-artwork');
+                albumCover.removeAttribute('src');
+                albumCover.alt = `${trackTitle} album cover`;
+                if (albumFallbackTitle) albumFallbackTitle.textContent = trackTitle;
+                if (albumFallbackNumber) albumFallbackNumber.textContent = trackNumber;
+
+                const applyArtwork = (imageUrl) => {
+                    if (albumCover.dataset.trackId !== trackId) return;
+                    albumCover.onload = () => {
+                        if (albumCover.dataset.trackId === trackId) albumSleeve.classList.add('has-artwork');
+                    };
+                    albumCover.onerror = () => albumSleeve.classList.remove('has-artwork');
+                    albumCover.src = imageUrl;
+                    miniArtwork(trackId, imageUrl);
+                };
+
+                if (artworkCache.has(trackId)) {
+                    applyArtwork(artworkCache.get(trackId));
                 } else {
-                    showTooltip(card, event);
+                    fetch(`https://open.spotify.com/oembed?url=${encodeURIComponent(`https://open.spotify.com/track/${trackId}`)}`)
+                        .then((response) => {
+                            if (!response.ok) throw new Error('Album artwork unavailable');
+                            return response.json();
+                        })
+                        .then((data) => {
+                            if (!data.thumbnail_url) throw new Error('No album artwork returned');
+                            artworkCache.set(trackId, data.thumbnail_url);
+                            miniArtwork(trackId, data.thumbnail_url);
+                            applyArtwork(data.thumbnail_url);
+                        })
+                        .catch(() => {
+                            if (albumCover.dataset.trackId === trackId) albumSleeve.classList.remove('has-artwork');
+                        });
                 }
-            }, { passive: true });
-        });
+            }
 
-        document.addEventListener('pointerdown', (event) => {
-            if (!event.target.closest('.spotify-card')) hideTooltip();
-        });
-        window.addEventListener('scroll', hideTooltip, { passive: true });
-        window.addEventListener('resize', hideTooltip);
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape') hideTooltip();
-        });
+            const nextSrc = `https://open.spotify.com/embed/track/${encodeURIComponent(trackId)}?utm_source=generator&theme=0`;
+            if (player.getAttribute('src') !== nextSrc) player.setAttribute('src', nextSrc);
+
+            record.classList.remove('is-changing');
+            if (animate && !prefersReducedMotion) {
+                void record.offsetWidth;
+                record.classList.add('is-changing');
+            }
+        };
+
+        choices.forEach((choice, index) => choice.addEventListener('click', () => selectTrack(index)));
+        previous?.addEventListener('click', () => selectTrack(activeIndex - 1));
+        next?.addEventListener('click', () => selectTrack(activeIndex + 1));
+        record.addEventListener('animationend', () => record.classList.remove('is-changing'));
+        selectTrack(activeIndex, false);
     };
 
     // Calendar-aware elapsed time from October 18, 2024.
@@ -243,7 +274,7 @@
     };
 
     const init = () => {
-        initializeSpotifyTooltips();
+        initializeVinylPlayer();
         initializeCounter();
         initializeScrollAnimations();
         initializeLightbox();
