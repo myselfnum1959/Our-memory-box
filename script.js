@@ -1,218 +1,258 @@
-// ===========================
-// SPOTIFY DESCRIPTION TOOLTIP
-// ===========================
+/* Memory Box — small interactions, no libraries required. */
 
-const initializeSpotifyTooltips = () => {
-  const spotifyCards = document.querySelectorAll('.spotify-card');
-  const descriptionBox = document.querySelector('.song-description');
-  
-  if (!descriptionBox) return;
+(() => {
+    'use strict';
 
-  let currentCard = null;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Function to show description
-  const showDescription = (card, description) => {
-    descriptionBox.textContent = description;
-    descriptionBox.classList.add('show');
-    currentCard = card;
-  };
+    // Show the personal note attached to each song player.
+    const initializeSpotifyTooltips = () => {
+        const cards = document.querySelectorAll('.spotify-card');
+        const tooltip = document.querySelector('.song-description');
+        if (!cards.length || !tooltip) return;
 
-  // Function to hide description
-  const hideDescription = () => {
-    descriptionBox.classList.remove('show');
-    currentCard = null;
-  };
+        let activeCard = null;
 
-  // Function to update tooltip position
-  const updatePosition = (e) => {
-    const x = e.clientX || e.touches?.[0]?.clientX;
-    const y = e.clientY || e.touches?.[0]?.clientY;
-    
-    if (x && y) {
-      const offset = 20;
-      const boxWidth = descriptionBox.offsetWidth;
-      const boxHeight = descriptionBox.offsetHeight;
-      
-      // Prevent tooltip from going off-screen
-      let left = x + offset;
-      let top = y + offset;
-      
-      if (left + boxWidth > window.innerWidth) {
-        left = x - boxWidth - offset;
-      }
-      
-      if (top + boxHeight > window.innerHeight) {
-        top = y - boxHeight - offset;
-      }
-      
-      descriptionBox.style.left = `${left}px`;
-      descriptionBox.style.top = `${top}px`;
-    }
-  };
+        const positionTooltip = (event) => {
+            const point = event.touches?.[0] || event.changedTouches?.[0] || event;
+            const x = point.clientX;
+            const y = point.clientY;
+            if (!Number.isFinite(x) || !Number.isFinite(y)) return;
 
-  // Add event listeners to each Spotify card
-  spotifyCards.forEach(card => {
-    const iframe = card.querySelector('iframe');
-    if (!iframe) return;
+            const edge = 14;
+            const offset = 18;
+            const width = tooltip.offsetWidth;
+            const height = tooltip.offsetHeight;
+            let left = x + offset;
+            let top = y + offset;
 
-    const description = iframe.getAttribute('data-description');
-    if (!description) return;
+            if (left + width > window.innerWidth - edge) left = x - width - offset;
+            if (top + height > window.innerHeight - edge) top = y - height - offset;
 
-    // Desktop: Mouse events
-    card.addEventListener('mouseenter', () => {
-      showDescription(card, description);
-    });
+            left = Math.max(edge, Math.min(left, window.innerWidth - width - edge));
+            top = Math.max(edge, Math.min(top, window.innerHeight - height - edge));
+            tooltip.style.left = `${left}px`;
+            tooltip.style.top = `${top}px`;
+        };
 
-    card.addEventListener('mouseleave', () => {
-      hideDescription();
-    });
+        const hideTooltip = () => {
+            tooltip.classList.remove('show');
+            activeCard = null;
+        };
 
-    card.addEventListener('mousemove', updatePosition);
+        const showTooltip = (card, event) => {
+            const iframe = card.querySelector('iframe');
+            const description = iframe?.dataset.description?.trim();
+            if (!description) return;
+            tooltip.textContent = description;
+            tooltip.classList.add('show');
+            activeCard = card;
+            if (event) positionTooltip(event);
+        };
 
-    // Mobile: Touch events
-    card.addEventListener('touchstart', (e) => {
-      if (currentCard === card) {
-        hideDescription();
-      } else {
-        showDescription(card, description);
-        updatePosition(e);
-      }
-    });
-  });
+        cards.forEach((card) => {
+            const iframe = card.querySelector('iframe');
+            if (!iframe?.dataset.description) return;
 
-  // Hide tooltip when clicking/touching elsewhere
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('.spotify-card')) {
-      hideDescription();
-    }
-  });
+            card.addEventListener('mouseenter', (event) => {
+                if (event.pointerType === 'touch') return;
+                showTooltip(card, event);
+            });
+            card.addEventListener('mousemove', (event) => {
+                if (activeCard === card) positionTooltip(event);
+            });
+            card.addEventListener('mouseleave', hideTooltip);
 
-  // Update position on scroll
-  window.addEventListener('scroll', () => {
-    if (currentCard) {
-      hideDescription();
-    }
-  });
-};
-
-// ===========================
-// TIME COUNTER
-// ===========================
-
-const initializeCounter = () => {
-  const anniversaryDate = new Date('2024-10-18T00:00:00');
-  
-  const updateCounter = () => {
-    const currentDate = new Date();
-    const diffInMs = currentDate - anniversaryDate;
-    
-    // Calculate time components
-    const msPerSecond = 1000;
-    const msPerMinute = msPerSecond * 60;
-    const msPerHour = msPerMinute * 60;
-    const msPerDay = msPerHour * 24;
-    const msPerMonth = msPerDay * 30.44; // Average month length
-    const msPerYear = msPerDay * 365.25; // Account for leap years
-    
-    const years = Math.floor(diffInMs / msPerYear);
-    const months = Math.floor((diffInMs % msPerYear) / msPerMonth);
-    const days = Math.floor((diffInMs % msPerMonth) / msPerDay);
-    const hours = Math.floor((diffInMs % msPerDay) / msPerHour);
-    const minutes = Math.floor((diffInMs % msPerHour) / msPerMinute);
-    const seconds = Math.floor((diffInMs % msPerMinute) / msPerSecond);
-    
-    // Update DOM elements
-    const updateElement = (id, value) => {
-      const element = document.getElementById(id);
-      if (element) element.textContent = value.toString().padStart(2, '0');
-    };
-    
-    updateElement('years', years);
-    updateElement('months', months);
-    updateElement('days', days);
-    updateElement('hours', hours);
-    updateElement('minutes', minutes);
-    updateElement('seconds', seconds);
-    
-    // Calculate total monthsaries and anniversaries
-    const totalMonths = Math.floor(diffInMs / msPerMonth);
-    const totalYears = years;
-    
-    const counterDetails = document.getElementById('counterDetails');
-    if (counterDetails) {
-      const anniversaryText = totalYears === 1 ? 'anniversary' : 'anniversaries';
-      const monthsaryText = totalMonths === 1 ? 'monthsary' : 'monthsaries';
-      counterDetails.textContent = `That's ${totalYears} ${anniversaryText} and ${totalMonths} ${monthsaryText}!`;
-    }
-  };
-  
-  // Update immediately and then every second
-  updateCounter();
-  setInterval(updateCounter, 1000);
-};
-
-// ===========================
-// SCROLL ANIMATIONS
-// ===========================
-
-const initializeScrollAnimations = () => {
-  const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-  };
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.style.opacity = '1';
-        entry.target.style.transform = 'translateY(0)';
-      }
-    });
-  }, observerOptions);
-
-  // Observe all memory items
-  const memoryItems = document.querySelectorAll('.memory-item');
-  memoryItems.forEach(item => {
-    item.style.opacity = '0';
-    item.style.transform = 'translateY(30px)';
-    item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-    observer.observe(item);
-  });
-};
-
-// ===========================
-// SMOOTH SCROLL FOR ANCHOR LINKS
-// ===========================
-
-const initializeSmoothScroll = () => {
-  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-      e.preventDefault();
-      const target = document.querySelector(this.getAttribute('href'));
-      if (target) {
-        target.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
+            // Touch notes appear briefly without preventing interaction with Spotify.
+            card.addEventListener('touchstart', (event) => {
+                if (activeCard === card) {
+                    hideTooltip();
+                } else {
+                    showTooltip(card, event);
+                }
+            }, { passive: true });
         });
-      }
-    });
-  });
-};
 
-// ===========================
-// INITIALIZE ALL FEATURES
-// ===========================
+        document.addEventListener('pointerdown', (event) => {
+            if (!event.target.closest('.spotify-card')) hideTooltip();
+        });
+        window.addEventListener('scroll', hideTooltip, { passive: true });
+        window.addEventListener('resize', hideTooltip);
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') hideTooltip();
+        });
+    };
 
-const init = () => {
-  initializeSpotifyTooltips();
-  initializeCounter();
-  initializeScrollAnimations();
-  initializeSmoothScroll();
-};
+    // Calendar-aware elapsed time from October 18, 2024.
+    const initializeCounter = () => {
+        const startDate = new Date(2024, 9, 18, 0, 0, 0, 0);
+        const fields = ['years', 'months', 'days', 'hours', 'minutes', 'seconds'];
+        if (!fields.some((id) => document.getElementById(id))) return;
 
-// Run when DOM is ready
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', init);
-} else {
-  init();
-}
+        const addMonths = (date, amount) => {
+            const result = new Date(date);
+            const originalDay = result.getDate();
+            result.setDate(1);
+            result.setMonth(result.getMonth() + amount);
+            const lastDay = new Date(result.getFullYear(), result.getMonth() + 1, 0).getDate();
+            result.setDate(Math.min(originalDay, lastDay));
+            return result;
+        };
+
+        const writeValue = (id, value) => {
+            const node = document.getElementById(id);
+            if (node) node.textContent = String(value).padStart(id === 'years' ? 1 : 2, '0');
+        };
+
+        const update = () => {
+            const now = new Date();
+            const isBeforeStart = now < startDate;
+            const reference = isBeforeStart ? startDate : now;
+
+            let totalMonths = Math.max(0,
+                (reference.getFullYear() - startDate.getFullYear()) * 12 +
+                (reference.getMonth() - startDate.getMonth())
+            );
+            while (totalMonths > 0 && addMonths(startDate, totalMonths) > reference) {
+                totalMonths -= 1;
+            }
+
+            const anchor = addMonths(startDate, totalMonths);
+            let remainder = Math.max(0, reference.getTime() - anchor.getTime());
+            const msPerDay = 24 * 60 * 60 * 1000;
+            const msPerHour = 60 * 60 * 1000;
+            const msPerMinute = 60 * 1000;
+            const days = Math.floor(remainder / msPerDay);
+            remainder -= days * msPerDay;
+            const hours = Math.floor(remainder / msPerHour);
+            remainder -= hours * msPerHour;
+            const minutes = Math.floor(remainder / msPerMinute);
+            remainder -= minutes * msPerMinute;
+            const seconds = Math.floor(remainder / 1000);
+
+            writeValue('years', Math.floor(totalMonths / 12));
+            writeValue('months', totalMonths % 12);
+            writeValue('days', days);
+            writeValue('hours', hours);
+            writeValue('minutes', minutes);
+            writeValue('seconds', seconds);
+
+            const years = Math.floor(totalMonths / 12);
+            const details = document.getElementById('counterDetails');
+            if (details) {
+                const anniversaryLabel = years === 1 ? 'anniversary' : 'anniversaries';
+                const monthLabel = totalMonths === 1 ? 'month' : 'months';
+                details.textContent = isBeforeStart
+                    ? 'Our story is just about to begin.'
+                    : `${years} ${anniversaryLabel} and ${totalMonths} ${monthLabel} of choosing each other.`;
+            }
+        };
+
+        update();
+        window.setInterval(update, 1000);
+
+        const yearNode = document.getElementById('footerYear');
+        if (yearNode) yearNode.textContent = `2024–${new Date().getFullYear()}`;
+    };
+
+    // Reveal photos gently as they enter the viewport; fall back to visible content.
+    const initializeScrollAnimations = () => {
+        const items = document.querySelectorAll('.memory-item');
+        if (!items.length || prefersReducedMotion || !('IntersectionObserver' in window)) return;
+
+        const observer = new IntersectionObserver((entries, currentObserver) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    currentObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.08, rootMargin: '0px 0px -35px 0px' });
+
+        items.forEach((item, index) => {
+            item.classList.add('reveal');
+            item.style.transitionDelay = `${Math.min(index % 3, 2) * 55}ms`;
+            observer.observe(item);
+        });
+    };
+
+    // Click any photograph to open the accessible, keyboard-friendly photo viewer.
+    const initializeLightbox = () => {
+        const dialog = document.getElementById('memoryLightbox');
+        const cards = Array.from(document.querySelectorAll('.memory-card'));
+        if (!dialog || !cards.length || typeof dialog.showModal !== 'function') return;
+
+        const image = dialog.querySelector('.lightbox-image');
+        const title = dialog.querySelector('.lightbox-title');
+        const date = dialog.querySelector('.lightbox-date');
+        const counter = dialog.querySelector('.lightbox-counter');
+        const closeButton = dialog.querySelector('.lightbox-close');
+        const previousButton = dialog.querySelector('.lightbox-prev');
+        const nextButton = dialog.querySelector('.lightbox-next');
+        let currentIndex = 0;
+
+        const render = (index) => {
+            currentIndex = (index + cards.length) % cards.length;
+            const card = cards[currentIndex];
+            const photo = card.querySelector('img');
+            image.src = photo.currentSrc || photo.src;
+            image.alt = photo.alt || '';
+            title.textContent = card.querySelector('.memory-caption')?.textContent.trim() || '';
+            date.textContent = card.querySelector('.memory-date')?.textContent.trim() || '';
+            counter.textContent = `${String(currentIndex + 1).padStart(2, '0')} / ${String(cards.length).padStart(2, '0')}`;
+        };
+
+        cards.forEach((card, index) => {
+            card.addEventListener('click', () => {
+                render(index);
+                if (!dialog.open) dialog.showModal();
+                closeButton.focus();
+            });
+        });
+
+        closeButton.addEventListener('click', () => dialog.close());
+        previousButton.addEventListener('click', () => render(currentIndex - 1));
+        nextButton.addEventListener('click', () => render(currentIndex + 1));
+
+        dialog.addEventListener('click', (event) => {
+            if (event.target === dialog) dialog.close();
+        });
+
+        dialog.addEventListener('keydown', (event) => {
+            if (event.key === 'ArrowLeft') {
+                event.preventDefault();
+                render(currentIndex - 1);
+            } else if (event.key === 'ArrowRight') {
+                event.preventDefault();
+                render(currentIndex + 1);
+            }
+        });
+    };
+
+    const initializeSmoothScroll = () => {
+        document.querySelectorAll('a[href^="#"]').forEach((link) => {
+            link.addEventListener('click', (event) => {
+                const selector = link.getAttribute('href');
+                if (!selector || selector === '#') return;
+                const target = document.querySelector(selector);
+                if (!target) return;
+                event.preventDefault();
+                target.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
+            });
+        });
+    };
+
+    const init = () => {
+        initializeSpotifyTooltips();
+        initializeCounter();
+        initializeScrollAnimations();
+        initializeLightbox();
+        initializeSmoothScroll();
+    };
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init, { once: true });
+    } else {
+        init();
+    }
+})();
